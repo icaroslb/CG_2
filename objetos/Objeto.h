@@ -27,7 +27,7 @@ public:
     , brilho( brilho )
     {}
 
-    virtual bool intersecao ( const Vec_3<T> &origem, const Vec_3<T> &vetor, T &dist ) = 0;
+    virtual bool intersecao ( const Vec_3<T> &origem, const Vec_3<T> &vetor, T &dist, Vec_3<T> &normal ) = 0;
     virtual Vec_3<T> normal( const Vec_3<T> &pos ) = 0;
 };
 

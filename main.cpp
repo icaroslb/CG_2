@@ -70,6 +70,8 @@ int main (int argc, char *argv[]) {
 
 		glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
+		teste_l->posicao._x = float( cos( t ) ) * 10.0f;
+		//teste_l->posicao._y = float( sin( t ) ) * 10.0f;
 		teste_l->posicao._z = float( sin( t ) ) * 10.0f;
 
 		for ( int i = canvas.altura - 1; i >= 0 ; i-- ) {
@@ -79,7 +81,7 @@ int main (int argc, char *argv[]) {
 				vetor._z = 100.0f;
 				vetor = unitario( vetor );
 				
-				canvas(i, j) = mundo.calcular_cor( Vec_3f( 0.0f, 0.0f, -20.0f ), vetor );
+				canvas(i, j) = mundo.calcular_cor( Vec_3f( 0.0f, 0.0f, -20.0f ), vetor, 0.0001f );
 			}	
 		}
 
@@ -88,7 +90,7 @@ int main (int argc, char *argv[]) {
 
 		tela.swap_tela();
 
-		t += 0.05f;
+		t += 0.1f;
 	}
 
     return 0;

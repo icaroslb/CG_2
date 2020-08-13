@@ -1,21 +1,22 @@
-#ifndef ESFERA_H
-#define ESFERA_H
+#ifndef CONE_H
+#define CONE_H
 
 #include "Objeto.h"
 
 template< class T >
-class Esfera : public Objeto<T> {
+class Cone : public Objeto<T> {
 public:
-	Vec_3<T> posicao;
-	T raio;
+/*	Vec_3<T> topo;
+	Vec_3<T> base;
+	T raio_base;
 		
-	Esfera( const Vec_3<T> &posicao, T raio, const Vec_3<T> &ambiente, const Vec_3<T> &difusa, const Vec_3<T> &especular, T brilho )
+	Cone( const Vec_3<T> &posicao, T raio, const Vec_3<T> &ambiente, const Vec_3<T> &difusa, const Vec_3<T> &especular, T brilho )
 	: Objeto<T>( ambiente, difusa, especular, brilho ) 
 	, posicao( posicao )
 	, raio( raio )
 	{}
 	
-	bool intersecao ( const Vec_3<T> &origem, const Vec_3<T> &vetor, T &dist, Vec_3<T> &normal )
+	bool intersecao ( const Vec_3<T> &origem, const Vec_3<T> &vetor, T &dist )
 	{
 		const Vec_3<T> v_posicao = origem - posicao;
 
@@ -42,7 +43,7 @@ public:
 				dist = ( ( t1 < t2 ) ? t1 : t2 );
 			}
 
-			normal = this->normal( ( origem + ( vetor * dist ) ) );
+			//std::cout << __FILE__ << " - " << dist << " - " << t1 << " - " << t2 << std::endl;
 
 			return true;
 
@@ -52,7 +53,7 @@ public:
 	Vec_3<T> normal( const Vec_3<T> &pos )
 	{
 		return unitario( pos - posicao );
-	}
+	}*/
 
 };
 

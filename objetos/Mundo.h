@@ -24,7 +24,9 @@ public:
 
         size_t menor_dist_id;
         size_t aux_id = 0;
-        
+        Vec_3<T> aux_normal;
+        Vec_3<T> menor_normal;
+
         Vec_3<T> pos;
         Vec_3<T> normal;
         Vec_3<T> v_luz;
@@ -33,12 +35,13 @@ public:
 
         for ( auto o : objetos ) {
             intersecao = false;
-            intersecao = o->intersecao( origem, vetor, aux_dist );
+            intersecao = o->intersecao( origem, vetor, aux_dist, aux_normal );
 
             if ( intersecao && menor_dist > aux_dist && aux_dist > erro ) {
                 ocorreu_intersecao = true;
                 menor_dist = aux_dist;
                 menor_dist_id = aux_id;
+                menor_normal = aux_normal;
             }
 
             aux_id++;
@@ -46,7 +49,7 @@ public:
 
         if ( ocorreu_intersecao ) {
             pos = origem + ( vetor * menor_dist );
-            normal = objetos[menor_dist_id]->normal( pos );
+            normal = unitario( menor_normal );
 
             for ( auto l : luzes ) {
                 v_luz = unitario( l->posicao - pos );
@@ -54,7 +57,7 @@ public:
                 aux_dist = T(0);
 
                 for ( auto o : objetos ) {
-                    intersecao = o->intersecao( pos, v_luz, aux_dist );
+                    intersecao = o->intersecao( pos, v_luz, aux_dist, aux_normal );
 
                     if ( intersecao && aux_dist > erro ) {
                         break;
@@ -69,7 +72,7 @@ public:
                 }
             }
 
-            return ( Vec_3f( 0.2f, 0.2f, 0.2f ) * objetos[menor_dist_id]->ambiente )
+            return ( Vec_3f( 0.5f, 0.5f, 0.5f ) * objetos[menor_dist_id]->ambiente )
                    + difusa_calc
                    + epecular_calc;
         } else {

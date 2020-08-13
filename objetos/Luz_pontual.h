@@ -27,11 +27,11 @@ public:
         const Vec_3<T> n = unitario( normal );
         const Vec_3<T> v = unitario( origem - ponto );
         const Vec_3<T> l = unitario( ponto - Luz<T>::posicao );
-        const Vec_3<T> m_l = projecao_unitario( l, n );
-        const Vec_3<T> l_l = l - ( T(2) * m_l );
+        const Vec_3<T> l_proj = -projecao_unitario( l, n );
+        const Vec_3<T> l_l = l + ( T(2) * l_proj );
 
 
-        if ( produto_escalar( n, l ) <= T(0) )
+        if ( produto_escalar( n, l ) <= T(0) && produto_escalar( v, l_l ) >= T(0) )
             return Luz<T>::cor * T( pow( produto_escalar( v, l_l ), brilho ) );
         else
             return Vec_3<T>();
