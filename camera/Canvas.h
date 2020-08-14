@@ -126,6 +126,11 @@ public:
     Engine_OpenGl *engine;
 
 
+    /*! Canvas
+    **  Entrada: A largura e a altura do canvas e o engine do OpenGl
+    **  Saída:
+    **  Cria uma textura e o vetor que será guardado os valores da textura
+    */
     Canvas ( int largura, int altura, Engine_OpenGl &opengl )
     : largura( largura )
     , altura( altura )
@@ -154,16 +159,32 @@ public:
 	    EBO = opengl.criar_element_buffer( indices_img, 6 );
     }
 
+    /*! operator ()
+    **  Entrada: Posição x e y desejada
+    **  Saída:   O Pixel referente as posições
+    **  A função acha o Pixel referente aos x e y passados. Como a textura é carregada
+    **  iniciando pelo ponto inferior esquerdo, fazemos a troca das ordens das colunas
+    */
     Pixel<T>& operator () ( size_t x, size_t y ) {
         return pixels[ ((altura - x - 1) * largura) + y ];
     }
 
+     /*! atualizar
+    **  Entrada: 
+    **  Saída:
+    **  Atualiza os valores da textura
+    */
     void atualizar () {
         glBindTexture( GL_TEXTURE_2D, id_canvas );
 
         glTexSubImage2D( GL_TEXTURE_2D, 0, 0, 0, largura, altura, GL_RGB, GL_FLOAT, pixels );
     }
 
+    /*! printar
+    **  Entrada: O shader utilizado
+    **  Saída:
+    **  Printa a textura em um plano cobrindo a tela nos valores de -1 a 1
+    */
     void printar ( Shader &shader ) {
         engine->usar_vertice_buffer( VAO );
 		engine->usar_element_buffer( EBO );
