@@ -1,14 +1,31 @@
-#include "algebra_vetor.h"
+#include "include_algebra.h"
 
 int main () {
 
-    Vec_2f vetor(1.0f, 1.0f);
-
-    std::cout << produto_escalar( vetor, vetor ) << std::endl;
-    std::cout << produto_vetorial( vetor, vetor ) << std::endl;
-    std::cout << norma_quadrada( vetor ) << std::endl;
-    std::cout << norma( vetor ) << std::endl;
-
-    return 0;
+	Matriz_2f matriz_1;
+	Matriz_2f matriz_2;
     
+    Vec_2f vetor;
+    
+	matriz_1 << 1.0f, 2.0f
+	          , 3.0f, 4.0f;
+	matriz_2 = matriz_1;
+	
+	vetor << 1.0f, 1.0f;
+
+	std::cout << matriz_1 + matriz_2
+	          << matriz_1 - matriz_2
+	          << matriz_1 * matriz_2
+	          << matriz_1 + 0.5f
+	          << matriz_1 - 0.5f
+	          << matriz_1 * 0.5f
+	          << matriz_1 / 0.5f
+	          << 0.5f + matriz_1
+	          << 0.5f - matriz_1
+	          << 0.5f * matriz_1
+	          << std::endl
+	          << matriz_1 * vetor
+	          << std::endl;
+
+	return 0;
 }

@@ -88,7 +88,6 @@ Matriz_4<T> Matriz_4<T>::operator * ( const Matriz_4<T> &m ) {
 	for ( size_t i = 0; i < 4; i++ ) {
 		for ( size_t j = 0; j < 4; j++ ) {
 			for ( size_t k = 0; k < 4; k++ ) {
-				//mat._val[ i + (j * 4) ] += _val [ i + (k * 4) ] * m._val[ (j * 4) + k ];
 				mat._val[ ( i * 4 ) + j ] += _val [ ( i * 4 ) + k ] * m._val[ j + ( k * 4 ) ];
 			}
 		}
@@ -101,10 +100,10 @@ template <class T>
 Vec_4<T> Matriz_4<T>::operator * ( const Vec_4<T> &v ) {
 	Vec_4<T> vet;
 	
-	vet._x = ( _val[ 0 ] * v._x ) + ( _val[ 4 ] * v._y ) + ( _val[ 8  ] * v._z ) + ( _val[ 12 ] * v._w );
-	vet._y = ( _val[ 1 ] * v._x ) + ( _val[ 5 ] * v._y ) + ( _val[ 9  ] * v._z ) + ( _val[ 13 ] * v._w );
-	vet._z = ( _val[ 2 ] * v._x ) + ( _val[ 6 ] * v._y ) + ( _val[ 10 ] * v._z ) + ( _val[ 14 ] * v._w );
-	vet._w = ( _val[ 3 ] * v._x ) + ( _val[ 7 ] * v._y ) + ( _val[ 11 ] * v._z ) + ( _val[ 15 ] * v._w );
+	vet._x = ( _val[ 0  ] * v._x ) + ( _val[ 1  ] * v._y ) + ( _val[ 2  ] * v._z ) + ( _val[ 3  ] * v._w );
+	vet._y = ( _val[ 4  ] * v._x ) + ( _val[ 5  ] * v._y ) + ( _val[ 6  ] * v._z ) + ( _val[ 7  ] * v._w );
+	vet._z = ( _val[ 8  ] * v._x ) + ( _val[ 9  ] * v._y ) + ( _val[ 10 ] * v._z ) + ( _val[ 11 ] * v._w );
+	vet._w = ( _val[ 12 ] * v._x ) + ( _val[ 13 ] * v._y ) + ( _val[ 14 ] * v._z ) + ( _val[ 15 ] * v._w );
 	
 	return vet;
 }
@@ -113,9 +112,9 @@ template <class T>
 Vec_3<T> Matriz_4<T>::operator * ( const Vec_3<T> &v ) {
 	Vec_3<T> vet;
 	
-	vet._x = ( _val[ 0 ] * v._x ) + ( _val[ 4 ] * v._y ) + ( _val[ 8  ] * v._z );
-	vet._y = ( _val[ 1 ] * v._x ) + ( _val[ 5 ] * v._y ) + ( _val[ 9  ] * v._z );
-	vet._z = ( _val[ 2 ] * v._x ) + ( _val[ 6 ] * v._y ) + ( _val[ 10 ] * v._z );
+	vet._x = ( _val[ 0 ] * v._x ) + ( _val[ 1 ] * v._y ) + ( _val[ 2  ] * v._z );
+	vet._y = ( _val[ 4 ] * v._x ) + ( _val[ 5 ] * v._y ) + ( _val[ 6  ] * v._z );
+	vet._z = ( _val[ 8 ] * v._x ) + ( _val[ 9 ] * v._y ) + ( _val[ 10 ] * v._z );
 	
 	return vet;
 }
@@ -160,7 +159,7 @@ Matriz_4<T> Matriz_4<T>::operator / ( T c ) {
 	c = T(1) / c;
 	
 	for ( size_t i = 0; i < 16; i++ ) {
-		mat._val[i] = _val[i] / c;
+		mat._val[i] = _val[i] * c;
 	}
 	
 	return mat;
@@ -198,7 +197,7 @@ Matriz_4<T>& Matriz_4<T>::operator *= ( const Matriz_4<T> &m ) {
 	for ( size_t i = 0; i < 4; i++ ) {
 		for ( size_t j = 0; j < 4; j++ ) {
 			for ( size_t k = 0; k < 4; k++ ) {
-				mat._val[ i + (j * 4) ] += _val [ i + (k * 4) ] * m._val[ (j * 4) + k ];
+				mat._val[ ( i * 4 ) + j ] += _val[ ( i * 4 ) + k ] * m._val[ j + ( k * 4 ) ];
 			}
 		}
 	}
@@ -261,8 +260,8 @@ Matriz_4<T> Matriz_4<T>::transposta () {
 /*===============================================================================================================================*/
 template <class T>	
 Matriz_4<T> operator + ( T c , const Matriz_4<T> &m ) {
-	Matriz_4<T> mat;
-	
+	Matriz_4<T> mat( m._val );
+
 	for ( size_t i = 0; i < 16; i += 5 )
 		mat._val[i] = c + m._val[i];
 	
@@ -273,8 +272,11 @@ template <class T>
 Matriz_4<T> operator - ( T c , const Matriz_4<T> &m ) {
 	Matriz_4<T> mat;
 	
+	for ( size_t i = 0; i < 16; i++ )
+		mat._val[i] = -m._val[i];
+
 	for ( size_t i = 0; i < 16; i += 5 )
-		mat._val[i] = c - m._val[i];
+		mat._val[i] += c;
 	
 	return mat;
 }
@@ -299,22 +301,18 @@ Matriz_4<T>& operator << ( Matriz_4<T> &mat, T dado ) {
 /*===============================================================================================================================*/
 template <class T>	
 Matriz_4<T>& operator , ( Matriz_4<T> &mat, T dado ) {
-	static size_t indice = 4;
+	static size_t indice = 1;
 	static auto   id_matriz  = &mat;
-	T aux;
 	
 	if ( id_matriz != &mat ) {
-		indice = 4;
+		indice = 1;
 		id_matriz  = &mat;
 	}
 	
 	mat._val[indice] = dado;
 	
-	indice += 4;
-	
-	if ( indice > ( aux = ( indice % 16 ) ) ) {
-		indice = ++aux;
-	}
+	indice++;
+	indice = indice % 16;
 	
 	return mat;
 }
@@ -323,9 +321,9 @@ template <class T>
 std::ostream& operator << ( std::ostream &out, const Matriz_4<T> &mat ) {
 	out << std::endl;
 	for ( size_t i = 0; i < 4; i++ ) {
-		out << "[ " << mat._val[i];
+		out << "[ " << mat._val[(i * 4)];
 		for ( size_t j = 1; j < 4; j++ ) {
-			out << ", " << mat._val[i + ( j * 4 )];
+			out << ", " << mat._val[(i * 4) + j];
 		}
 		out << " ]" << std::endl;
 	}

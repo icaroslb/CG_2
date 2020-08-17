@@ -8,7 +8,9 @@
 #include "camera/Canvas.h"
 
 #include "objetos/Esfera.h"
+
 #include "objetos/Luz_pontual.h"
+#include "objetos/Luz_cone.h"
 
 int main (int argc, char *argv[]) {
     Camera<float> camera( Vec_3f(  0.0f,  0.0f,  0.0f ), // Posição
@@ -49,13 +51,25 @@ int main (int argc, char *argv[]) {
 												, 0.6
 												);
 
-	Luz_pontual<float> *teste_l = new Luz_pontual<float>( Vec_3f( 0.0f, 20.0f, 0.0f )
-	                                                    , Vec_3f( 1.0f, 1.0f, 1.0f )
-														);
+	Luz_pontual<float> *teste_l_1 = new Luz_pontual<float>( Vec_3f( 0.0f, 20.0f, 0.0f )
+	                                                      , Vec_3f( 1.0f, 1.0f, 1.0f )
+														  );
+
+	Luz_cone<float> *teste_l_2 = new Luz_cone<float>( Vec_3f( 0.0f, 10.0f, 0.0f )
+	                                                , Vec_3f( 1.0f, 1.0f, 1.0f )
+													, Vec_3f( -1.0f, -1.0f, 0.0f )
+													, float(M_PI_4 * 0.25)
+													);
 	
 	mundo.objetos.push_back( (Objeto<float>*)teste_o_1 );
 	mundo.objetos.push_back( (Objeto<float>*)teste_o_2 );
-	mundo.luzes.push_back( (Luz<float>*)teste_l );
+	mundo.luzes.push_back( (Luz<float>*)teste_l_1 );
+
+	mundo.objetos[0]->matriz_tranformacao *= escalar( 1.0f, 2.0f, 1.0f );
+	mundo.objetos[0]->matriz_tranformacao_inversa *= escalar( 1.0f, 1.0f / 2.0f, 1.0f );
+
+	mundo.objetos[1]->matriz_tranformacao *= escalar( 2.0f, 0.0f, 1.0f );;
+	mundo.objetos[1]->matriz_tranformacao_inversa *= escalar( 1.0f / 2.0f, 1.0f, 1.0f );
 
 	while ( loop ) {
 
@@ -70,9 +84,12 @@ int main (int argc, char *argv[]) {
 
 		glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
-		teste_l->posicao._x = float( cos( t ) ) * 10.0f;
+		teste_l_1->posicao._x = float( cos( t ) ) * 10.0f;
 		//teste_l->posicao._y = float( sin( t ) ) * 10.0f;
-		teste_l->posicao._z = float( sin( t ) ) * 10.0f;
+		teste_l_1->posicao._z = float( sin( t ) ) * 10.0f;
+
+		//teste_l_2->direcao = unitario( teste_o_1->posicao - teste_l_2->posicao );
+
 
 		for ( int i = canvas.altura - 1; i >= 0 ; i-- ) {
 			for ( int j = 0; j < canvas.largura; j++ ) {

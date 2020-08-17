@@ -5,6 +5,7 @@ MAIN = main
 OBJ = obj/
 
 OBJETOS = $(wildcard objetos/*.h)
+ALGEBRA = $(wildcard algebra/*.h)
 
 all: $(OBJ) $(MAIN)
 
@@ -20,7 +21,7 @@ $(OBJ)Engine_SDL.o: engines/Engine_SDL.cpp engines/Engine_SDL.h
 $(OBJ)Shader.o: shaders/Shader.cpp shaders/Shader.h
 	g++ -g -c $< -o $@ $(INCLUDES) $(FLAGS) $(VERSION) $(LIBS)
 
-$(MAIN): $(OBJ)Engine_OpenGl.o $(OBJ)Engine_SDL.o $(OBJ)Shader.o camera/Canvas.h $(OBJETOS) $(MAIN).cpp
+$(MAIN): $(OBJ)Engine_OpenGl.o $(OBJ)Engine_SDL.o $(OBJ)Shader.o camera/Canvas.h $(OBJETOS) $(ALGEBRA) $(MAIN).cpp
 	g++ $^ -o $@ $(INCLUDES) $(FLAGS) $(VERSION) $(LIBS)
 
 clean:

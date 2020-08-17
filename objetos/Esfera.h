@@ -33,10 +33,12 @@ public:
     */
 	bool intersecao ( const Vec_3<T> &origem, const Vec_3<T> &vetor, T &dist, Vec_3<T> &normal )
 	{
-		const Vec_3<T> v_posicao = origem - posicao;
+		const Vec_3<T> raio_transformado = Objeto<T>::transformacao_objeto_mundo( vetor );
+		const Vec_3<T> origem_transfomada = Objeto<T>::transformacao_objeto_mundo( origem );
+		const Vec_3<T> v_posicao = origem_transfomada - posicao;
 
-		const T alfa  = produto_escalar( vetor, vetor );
-		const T beta  = T(2) * produto_escalar( vetor, v_posicao );
+		const T alfa  = produto_escalar( raio_transformado, raio_transformado );
+		const T beta  = T(2) * produto_escalar( raio_transformado, v_posicao );
 		const T gamma = produto_escalar( v_posicao, v_posicao ) - ( raio * raio );
 
 		const T delta = ( beta * beta ) - ( T(4) * alfa * gamma );
@@ -58,7 +60,7 @@ public:
 				dist = ( ( t1 < t2 && t1 >= T(0) ) ? t1 : t2 );
 			}
 
-			normal = this->normal( ( origem + ( vetor * dist ) ) );
+			normal = Objeto<T>::transformacao_objeto_mundo( this->normal( ( origem_transfomada + ( raio_transformado * dist ) ) ) );
 
 			return true;
 

@@ -88,7 +88,7 @@ public:
                 }
             }
 
-            return ( Vec_3f( 0.5f, 0.5f, 0.5f ) * objetos[menor_dist_id]->ambiente )
+            return ( Vec_3f( 0.7f, 0.7f, 0.7f ) * objetos[menor_dist_id]->ambiente )
                    + difusa_calc
                    + epecular_calc;
         } else {

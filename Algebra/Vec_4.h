@@ -2,6 +2,10 @@
 #define VEC_4_H
 
 #include <iostream>
+#include <cstring>
+
+template <class T>
+class Vec_3;
 
 template <class T>
 class Vec_4 {
@@ -30,6 +34,9 @@ public:
 	Vec_4<T>  operator + ( const Vec_4<T> &v ) const;
 	Vec_4<T>  operator - ( const Vec_4<T> &v ) const;
 	Vec_4<T>  operator * ( const Vec_4<T> &v ) const;
+	Vec_4<T>  operator + ( const Vec_3<T> &v ) const;
+	Vec_4<T>  operator - ( const Vec_3<T> &v ) const;
+	Vec_4<T>  operator * ( const Vec_3<T> &v ) const;
 	Vec_4<T>  operator + ( T c ) const;
 	Vec_4<T>  operator - ( T c ) const;
 	Vec_4<T>  operator * ( T c ) const;
@@ -53,8 +60,8 @@ typedef Vec_4<double> Vec_4d;
 template <class T> Vec_4<T> operator + ( const Vec_4<T> &v );
 template <class T> Vec_4<T> operator - ( const Vec_4<T> &v );
 template <class T> Vec_4<T> operator * ( T c, const Vec_4<T> &v );
-template <class T> Vec_2<T>& operator << ( Vec_2<T> &vet, T dado );
-template <class T> Vec_2<T>& operator ,  ( Vec_2<T> &vet, T dado );
+template <class T> Vec_4<T>& operator << ( Vec_2<T> &vet, T dado );
+template <class T> Vec_4<T>& operator ,  ( Vec_2<T> &vet, T dado );
 template <class T> std::ostream& operator << ( std::ostream &os, const Vec_4<T> &v );
 
 #include "Vec_4.inl"

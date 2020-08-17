@@ -42,7 +42,7 @@ template <class T>
 T& Matriz_2<T>::operator () ( const size_t linha,  const size_t coluna )
 {
 	if ( coluna < 2 && linha < 2 )
-		return _val[ linha + ( coluna * 2 ) ];
+		return _val[ ( linha * 2 ) + coluna ];
 }
 /*===============================================================================================================================*/
 template <class T>
@@ -74,7 +74,7 @@ Matriz_2<T> Matriz_2<T>::operator * ( const Matriz_2<T> &m ) {
 	for ( size_t i = 0; i < 2; i++ ) {
 		for ( size_t j = 0; j < 2; j++ ) {
 			for ( size_t k = 0; k < 2; k++ ) {
-				mat._val[ i + (j * 2) ] += _val [ i + (k * 2) ] * m._val[ (j * 2) + k ];
+				mat._val[ ( i * 2 ) + j ] += _val [ ( i * 2 ) + k ] * m._val[ j + ( k * 2 ) ];
 			}
 		}
 	}
@@ -86,8 +86,8 @@ template <class T>
 Vec_2<T> Matriz_2<T>::operator * ( const Vec_2<T> &v ) {
 	Vec_2<T> vet;
 	
-	vet._x = ( _val[ 0 ] * v._x ) + ( _val[ 2 ] * v._y );
-	vet._y = ( _val[ 1 ] * v._x ) + ( _val[ 3 ] * v._y );
+	vet._x = ( _val[ 0 ] * v._x ) + ( _val[ 1 ] * v._y );
+	vet._y = ( _val[ 2 ] * v._x ) + ( _val[ 3 ] * v._y );
 	
 	return vet;
 }
@@ -170,7 +170,7 @@ Matriz_2<T>& Matriz_2<T>::operator *= ( const Matriz_2<T> &m ) {
 	for ( size_t i = 0; i < 2; i++ ) {
 		for ( size_t j = 0; j < 2; j++ ) {
 			for ( size_t k = 0; k < 2; k++ ) {
-				mat._val[ i + (j * 2) ] += _val [ i + (k * 2) ] * m._val[ (j * 2) + k ];
+				mat._val[ ( i * 2 ) + j ] += _val [ ( i * 2 ) + k ] * m._val[ j + ( k * 2 ) ];
 			}
 		}
 	}
@@ -220,7 +220,7 @@ Matriz_2<T>& Matriz_2<T>::operator /= ( T c ) {
 /*===============================================================================================================================*/
 template <class T>	
 Matriz_2<T> operator + ( T c , const Matriz_2<T> &m ) {
-	Matriz_2<T> mat;
+	Matriz_2<T> mat( m._val );
 	
 	for ( size_t i = 0; i < 4; i += 3 )
 		mat._val[i] = c + m._val[i];
@@ -232,8 +232,11 @@ template <class T>
 Matriz_2<T> operator - ( T c , const Matriz_2<T> &m ) {
 	Matriz_2<T> mat;
 	
+	for ( size_t i = 0; i < 4; i++ )
+		mat._val[i] = -m._val[i];
+
 	for ( size_t i = 0; i < 4; i += 3 )
-		mat._val[i] = c - m._val[i];
+		mat._val[i] += c;
 	
 	return mat;
 }
@@ -258,22 +261,19 @@ Matriz_2<T>& operator << ( Matriz_2<T> &mat, T dado ) {
 /*===============================================================================================================================*/
 template <class T>	
 Matriz_2<T>& operator , ( Matriz_2<T> &mat, T dado ) {
-	static size_t indice = 2;
+	static size_t indice = 1;
 	static auto   id_matriz = &mat;
 	T aux;
 	
 	if ( id_matriz != &mat ) {
-		indice = 2;
+		indice = 1;
 		id_matriz = &mat;
 	}
 	
 	mat._val[indice] = dado;
 	
-	indice += 2;
-	
-	if ( indice > ( aux = ( indice % 4 ) ) ) {
-		indice = ++aux;
-	}
+	indice++;
+	indice = indice % 4;
 	
 	return mat;
 }
@@ -282,9 +282,9 @@ template <class T>
 std::ostream& operator << ( std::ostream &out, const Matriz_2<T> &mat ) {
 	out << std::endl;
 	for ( size_t i = 0; i < 2; i++ ) {
-		out << "[ " << mat._val[i];
+		out << "[ " << mat._val[i * 2];
 		for ( size_t j = 1; j < 2; j++ ) {
-			out << ", " << mat._val[i + ( j * 2 )];
+			out << ", " << mat._val[( i * 2 ) + j];
 		}
 		out << " ]" << std::endl;
 	}

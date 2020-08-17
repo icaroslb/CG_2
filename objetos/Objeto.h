@@ -13,6 +13,7 @@ template <class T>
 class Objeto {
 public:
     Matriz_4<T> matriz_tranformacao;
+    Matriz_4<T> matriz_tranformacao_inversa;
 
     Vec_3<T> ambiente;
     Vec_3<T> difusa;
@@ -24,7 +25,8 @@ public:
     **  Saída:
     */
     Objeto( const Vec_3<T> &ambiente, const Vec_3<T> &difusa, const Vec_3<T> &especular, T brilho )
-    : matriz_tranformacao(Matriz_tipo::IDENTIDADE)
+    : matriz_tranformacao( Matriz_tipo::IDENTIDADE )
+    , matriz_tranformacao_inversa( Matriz_tipo::IDENTIDADE )
     , ambiente( ambiente )
     , difusa( difusa )
     , especular( especular )
@@ -50,6 +52,16 @@ public:
     **  como parâmetro.
     */
     virtual Vec_3<T> normal( const Vec_3<T> &pos ) = 0;
+
+    Vec_3<T> transformacao_mundo_objeto ( const Vec_3<T> &v )
+    {
+        return matriz_tranformacao_inversa * v;
+    }
+
+    Vec_3<T> transformacao_objeto_mundo ( const Vec_3<T> &v )
+    {
+        return transposta( matriz_tranformacao_inversa ) * v;
+    }
 };
 
 #endif

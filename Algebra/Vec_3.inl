@@ -76,9 +76,7 @@ Vec_3<T> Vec_3<T>::operator / ( T c ) const
 template <class T>
 Vec_3<T>& Vec_3<T>::operator = ( const Vec_3<T> &v )
 {
-	_x = v._x;
-	_y = v._y;
-	_z = v._z;
+	memcpy( coord, v.coord, sizeof(T) * 3 );
 	
 	return *this;
 }
@@ -169,7 +167,7 @@ Vec_3<T> operator - ( const Vec_3<T> &v )
 /*===============================================================================================================================*/
 template <class T>
 Vec_3<T> operator * ( T c, const Vec_3<T> &v ) {
-	return Vec_3<T>( v._x * c, v._y * c, v._z * c );
+	return Vec_3<T>( c * v._x, c * v._y, c * v._z );
 }
 /*===============================================================================================================================*/
 template <class T>	
