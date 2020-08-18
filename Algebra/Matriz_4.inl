@@ -83,7 +83,7 @@ Matriz_4<T> Matriz_4<T>::operator - ( const Matriz_4<T> &m ) {
 /*===============================================================================================================================*/
 template <class T>	
 Matriz_4<T> Matriz_4<T>::operator * ( const Matriz_4<T> &m ) {
-	Matriz_4<T> mat;
+	Matriz_4<T> mat( Matriz_tipo::ZEROS );
 	
 	for ( size_t i = 0; i < 4; i++ ) {
 		for ( size_t j = 0; j < 4; j++ ) {

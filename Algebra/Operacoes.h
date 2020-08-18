@@ -35,22 +35,16 @@ Matriz_4<T> rotacionar ( Ori_transf tipo, T ang )
     switch ( tipo )
     {
     case Ori_transf::xy:
-        m( 0, 0 ) =  cos( ang );
-        m( 0, 1 ) =  sin( ang );
-        m( 1, 0 ) = -sin( ang );
-        m( 1, 1 ) =  cos( ang );
+        m( 0, 0 ) =  cos( ang ); m( 0, 1 ) =  sin( ang );
+        m( 1, 0 ) = -sin( ang ); m( 1, 1 ) =  cos( ang );
     break;
     case Ori_transf::yz:
-        m( 1, 1 ) =  cos( ang );
-        m( 1, 2 ) =  sin( ang );
-        m( 2, 1 ) = -sin( ang );
-        m( 2, 2 ) =  cos( ang );
+        m( 1, 1 ) =  cos( ang ); m( 1, 2 ) = -sin( ang );
+        m( 2, 1 ) =  sin( ang ); m( 2, 2 ) =  cos( ang );
     break;
     case Ori_transf::zx:
-        m( 0, 0 ) =  cos( ang );
-        m( 0, 2 ) =  sin( ang );
-        m( 2, 0 ) = -sin( ang );
-        m( 2, 2 ) =  cos( ang );
+        m( 0, 0 ) =  cos( ang ); m( 0, 2 ) = -sin( ang );
+        m( 2, 0 ) =  sin( ang ); m( 2, 2 ) =  cos( ang );
     break;
     }
 
