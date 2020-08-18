@@ -10,7 +10,7 @@ public:
     **  Entrada: Posição e a cor da luz
     **  Saída:
     */
-    Luz_pontual ( const Vec_3<T> &posicao, const Vec_3<T> &cor )
+    Luz_pontual ( const Vec_4<T> &posicao, const Vec_3<T> &cor )
     : Luz<T>( posicao, cor )
     {}
 
@@ -19,7 +19,7 @@ public:
     **  Saída:   Luz difusa calculada
     **  Essa função calcula a luz difusa de um ponto em relação a uma normal unitária
     */
-    Vec_3<T> calcular_difusa ( const Vec_3<T> &ponto, const Vec_3<T> &normal )
+    Vec_3<T> calcular_difusa ( const Vec_4<T> &ponto, const Vec_3<T> &normal )
     {
         //Calcula o vetor unitário da normal e do ponto à luz
         const Vec_3<T> n = normal;
@@ -38,11 +38,11 @@ public:
     **  Essa função calcula a luz especular de um ponto em relação a uma normal unitária
     **  e a posição do observador.
     */
-    Vec_3<T> calcular_especular ( const Vec_3<T> &ponto, const Vec_3<T> &normal, const Vec_3<T> &origem, T brilho )
+    Vec_3<T> calcular_especular ( const Vec_4<T> &ponto, const Vec_3<T> &normal, const Vec_4<T> &origem, T brilho )
     {
          //Calcula o vetor unitário da normal, o vetor apontando para o observador e do ponto à luz
         const Vec_3<T> n = normal;
-        const Vec_3<T> v = unitario( origem - ponto );
+        const Vec_3<T> v = unitario( ( origem - ponto ) );
         const Vec_3<T> l = unitario( ponto - Luz<T>::posicao );
         //Projeta o vetor da luz no vetor normal, inverte e usa-o para espelhar o vetor da luz
         const Vec_3<T> l_proj = -projecao_unitario( l, n );

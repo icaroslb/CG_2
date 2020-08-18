@@ -36,14 +36,14 @@ int main (int argc, char *argv[]) {
 	Vec_3f vetor(0.0f, 0.0f, 1.0f);
 	float t = 0;
 
-	Esfera<float> *teste_o_1 = new Esfera<float>( Vec_3f( 0.0f, 0.0f, 5.0f )
+	Esfera<float> *teste_o_1 = new Esfera<float>( Vec_4f( 0.0f, 0.0f, 5.0f, 1.0f )
 	                                            , 4.0f
 	                                            , Vec_3f( 0.0215f, 0.1745f, 0.0215f )
 												, Vec_3f( 0.07568f, 0.61424f, 0.07568f )
 												, Vec_3f( 0.633f, 0.727811f, 0.633f )
 												, 0.6 );
 
-	Esfera<float> *teste_o_2 = new Esfera<float>( Vec_3f( 0.0f, 5.0f, 2.0f )
+	Esfera<float> *teste_o_2 = new Esfera<float>( Vec_4f( 0.0f, 5.0f, 2.0f, 1.0f )
 	                                            , 2.0f
 	                                            , Vec_3f( 0.1745f, 0.01175f, 0.01175f )
 												, Vec_3f( 0.61424f, 0.04136f, 0.04136f )
@@ -51,11 +51,11 @@ int main (int argc, char *argv[]) {
 												, 0.6
 												);
 
-	Luz_pontual<float> *teste_l_1 = new Luz_pontual<float>( Vec_3f( 0.0f, 20.0f, 0.0f )
+	Luz_pontual<float> *teste_l_1 = new Luz_pontual<float>( Vec_4f( 0.0f, 20.0f, 0.0f, 1.0f )
 	                                                      , Vec_3f( 1.0f, 1.0f, 1.0f )
 														  );
 
-	Luz_cone<float> *teste_l_2 = new Luz_cone<float>( Vec_3f( 0.0f, 10.0f, 0.0f )
+	Luz_cone<float> *teste_l_2 = new Luz_cone<float>( Vec_4f( 0.0f, 10.0f, 0.0f, 1.0f )
 	                                                , Vec_3f( 1.0f, 1.0f, 1.0f )
 													, Vec_3f( -1.0f, -1.0f, 0.0f )
 													, float(M_PI_4 * 0.25)
@@ -65,8 +65,10 @@ int main (int argc, char *argv[]) {
 	mundo.objetos.push_back( (Objeto<float>*)teste_o_2 );
 	mundo.luzes.push_back( (Luz<float>*)teste_l_1 );
 
-	mundo.objetos[0]->matriz_tranformacao *= escalar( 1.0f, 2.0f, 1.0f );
-	mundo.objetos[0]->matriz_tranformacao_inversa *= escalar( 1.0f, 1.0f / 2.0f, 1.0f );
+	mundo.objetos[0]->matriz_tranformacao *= rotacionar( Ori_transf::xy, float(M_PI_4) )
+	                                       * escalar( 1.0f, 2.0f, 1.0f );
+	mundo.objetos[0]->matriz_tranformacao_inversa *= rotacionar( Ori_transf::xy, float(-M_PI_4) )
+	                                               * escalar( 1.0f, 1.0f / 2.0f, 1.0f );
 
 	mundo.objetos[1]->matriz_tranformacao *= escalar( 2.0f, 0.0f, 1.0f );;
 	mundo.objetos[1]->matriz_tranformacao_inversa *= escalar( 1.0f / 2.0f, 1.0f, 1.0f );
@@ -98,7 +100,7 @@ int main (int argc, char *argv[]) {
 				vetor._z = 100.0f;
 				vetor = unitario( vetor );
 				
-				canvas(i, j) = mundo.calcular_cor( Vec_3f( 0.0f, 0.0f, -20.0f ), vetor, 0.0001f );
+				canvas(i, j) = mundo.calcular_cor( Vec_4f( 0.0f, 0.0f, -20.0f, 1.0f ), vetor, 0.0001f );
 			}	
 		}
 

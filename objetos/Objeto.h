@@ -43,7 +43,7 @@ public:
     **  caso não haja retornará uma das posibilidades. Pelo parâmetro normal, retorna o valor do
     **  vetor normal à interseção referênte a distância retornada.
     */
-    virtual bool intersecao ( const Vec_3<T> &origem, const Vec_3<T> &vetor, T &dist, Vec_3<T> &normal ) = 0;
+    virtual bool intersecao ( const Vec_4<T> &origem, const Vec_3<T> &vetor, T &dist, Vec_3<T> &normal, Vec_4<T> &p_colisao ) = 0;
     
     /*! normal
     **  Entrada: Ponto referente à normal desejada
@@ -51,16 +51,26 @@ public:
     **  Essa função calcula o vetor normal referente ao ponto passado
     **  como parâmetro.
     */
-    virtual Vec_3<T> normal( const Vec_3<T> &pos ) = 0;
+    virtual Vec_3<T> normal( const Vec_4<T> &pos ) = 0;
 
     Vec_3<T> transformacao_mundo_objeto ( const Vec_3<T> &v )
     {
         return matriz_tranformacao_inversa * v;
     }
 
+    Vec_4<T> transformacao_mundo_objeto ( const Vec_4<T> &d )
+    {
+        return matriz_tranformacao_inversa * d;
+    }
+
     Vec_3<T> transformacao_objeto_mundo ( const Vec_3<T> &v )
     {
         return transposta( matriz_tranformacao_inversa ) * v;
+    }
+
+    Vec_4<T> transformacao_objeto_mundo ( const Vec_4<T> &d )
+    {
+        return transposta( matriz_tranformacao_inversa ) * d;
     }
 };
 

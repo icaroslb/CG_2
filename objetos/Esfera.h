@@ -6,7 +6,7 @@
 template< class T >
 class Esfera : public Objeto<T> {
 public:
-	Vec_3<T> posicao;
+	Vec_4<T> posicao;
 	T raio;
 	
 	/*! Objeto
@@ -14,7 +14,7 @@ public:
 	**  especular e o fator do brilho do material
     **  Saída:
     */
-	Esfera( const Vec_3<T> &posicao, T raio, const Vec_3<T> &ambiente, const Vec_3<T> &difusa, const Vec_3<T> &especular, T brilho )
+	Esfera( const Vec_4<T> &posicao, T raio, const Vec_3<T> &ambiente, const Vec_3<T> &difusa, const Vec_3<T> &especular, T brilho )
 	: Objeto<T>( ambiente, difusa, especular, brilho ) 
 	, posicao( posicao )
 	, raio( raio )
@@ -31,10 +31,10 @@ public:
     **  caso não haja retornará uma das posibilidades. Pelo parâmetro normal, retorna o valor do
     **  vetor normal à interseção referênte a distância retornada.
     */
-	bool intersecao ( const Vec_3<T> &origem, const Vec_3<T> &vetor, T &dist, Vec_3<T> &normal )
+	bool intersecao ( const Vec_4<T> &origem, const Vec_3<T> &vetor, T &dist, Vec_3<T> &normal, Vec_4<T> &p_colisao )
 	{
 		const Vec_3<T> raio_transformado = Objeto<T>::transformacao_objeto_mundo( vetor );
-		const Vec_3<T> origem_transfomada = Objeto<T>::transformacao_objeto_mundo( origem );
+		const Vec_4<T> origem_transfomada = Objeto<T>::transformacao_objeto_mundo( origem );
 		const Vec_3<T> v_posicao = origem_transfomada - posicao;
 
 		const T alfa  = produto_escalar( raio_transformado, raio_transformado );
@@ -61,6 +61,7 @@ public:
 			}
 
 			normal = Objeto<T>::transformacao_objeto_mundo( this->normal( ( origem_transfomada + ( raio_transformado * dist ) ) ) );
+			p_colisao = Objeto<T>::transformacao_objeto_mundo( origem_transfomada + ( raio_transformado * dist ) );
 
 			return true;
 
@@ -73,7 +74,7 @@ public:
     **  Essa função calcula o vetor normal referente ao ponto passado
     **  como parâmetro.
     */
-	Vec_3<T> normal( const Vec_3<T> &pos )
+	Vec_3<T> normal( const Vec_4<T> &pos )
 	{
 		return unitario( pos - posicao );
 	}

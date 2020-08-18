@@ -15,7 +15,7 @@ public:
     **  Saída:
     **  Calcula tanto o ângulo em cosseno e também o fator de decaimento linear
     */
-    Luz_cone ( const Vec_3<T> &posicao, const Vec_3<T> &cor, const Vec_3<T> &direcao, T abertura )
+    Luz_cone ( const Vec_4<T> &posicao, const Vec_3<T> &cor, const Vec_3<T> &direcao, T abertura )
     : Luz<T>( posicao, cor )
     , direcao( unitario( direcao ) )
     , abertura( cos( abertura ) )
@@ -27,7 +27,7 @@ public:
     **  Saída:   Luz difusa calculada
     **  Essa função calcula a luz difusa de um ponto em relação a uma normal unitária
     */
-    Vec_3<T> calcular_difusa ( const Vec_3<T> &ponto, const Vec_3<T> &normal )
+    Vec_3<T> calcular_difusa ( const Vec_4<T> &ponto, const Vec_3<T> &normal )
     {
         //Calcula o vetor unitário da normal e do ponto à luz
         const Vec_3<T> n = normal;
@@ -51,7 +51,7 @@ public:
     **  Essa função calcula a luz especular de um ponto em relação a uma normal unitária
     **  e a posição do observador.
     */
-    Vec_3<T> calcular_especular ( const Vec_3<T> &ponto, const Vec_3<T> &normal, const Vec_3<T> &origem, T brilho )
+    Vec_3<T> calcular_especular ( const Vec_4<T> &ponto, const Vec_3<T> &normal, const Vec_4<T> &origem, T brilho )
     {
          //Calcula o vetor unitário da normal, o vetor apontando para o observador e do ponto à luz
         const Vec_3<T> n = normal;
