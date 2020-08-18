@@ -70,7 +70,7 @@ public:
 
     Vec_4<T> transformacao_objeto_mundo ( const Vec_4<T> &d )
     {
-        return transposta( matriz_tranformacao_inversa ) * d;
+        return matriz_tranformacao * d;
     }
 };
 
