@@ -4,8 +4,7 @@
 #include <iostream>
 #include <cstring>
 
-template <class T>
-class Vec_3;
+#include "Vec_3.h"
 
 template <class T>
 class Vec_4 {
@@ -52,6 +51,9 @@ public:
 	Vec_4<T>& operator -= ( T c );
 	Vec_4<T>& operator *= ( T c );
 	Vec_4<T>& operator /= ( T c );
+
+	operator Vec_3<T> () { return Vec_3<T>( _x, _y, _z ); }
+
 };
 
 typedef Vec_4<float>  Vec_4f;
@@ -63,6 +65,10 @@ template <class T> Vec_4<T> operator * ( T c, const Vec_4<T> &v );
 template <class T> Vec_4<T>& operator << ( Vec_2<T> &vet, T dado );
 template <class T> Vec_4<T>& operator ,  ( Vec_2<T> &vet, T dado );
 template <class T> std::ostream& operator << ( std::ostream &os, const Vec_4<T> &v );
+
+template <class T> Vec_4<T>  operator + ( const Vec_3<T> &v3, const Vec_4<T> &v4 );
+template <class T> Vec_4<T>  operator - ( const Vec_3<T> &v3, const Vec_4<T> &v4 );
+template <class T> Vec_4<T>  operator * ( const Vec_3<T> &v3, const Vec_4<T> &v4 );
 
 #include "Vec_4.inl"
 
