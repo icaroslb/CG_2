@@ -69,8 +69,7 @@ Vec_2<T> Vec_2<T>::operator / ( T c ) const
 template <class T>
 Vec_2<T>& Vec_2<T>::operator = ( const Vec_2<T> &v )
 {
-	_x = v._x;
-	_y = v._y;
+	memcpy( coord, v.coord, sizeof(T) * 2 );
 	
 	return *this;
 }
@@ -152,7 +151,7 @@ Vec_2<T> operator - ( const Vec_2<T> &v ) {
 /*===============================================================================================================================*/
 template <class T>
 Vec_2<T> operator * ( T c, const Vec_2<T> &v ) {
-	return Vec_2<T>( v._x * c, v._y * c );
+	return Vec_2<T>( c * v._x, c * v._y );
 }
 /*===============================================================================================================================*/
 template <class T>	

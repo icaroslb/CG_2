@@ -12,9 +12,20 @@ public:
     std::vector<Objeto<T>*> objetos;
     std::vector<Luz<T>*> luzes;
 
+    /*! Mundo
+    **  Entrada:
+    **  Saída:
+    */
     Mundo () {}
 
-    Vec_3<T> calcular_cor ( const Vec_3<T> &origem, const Vec_3<T> &vetor, T erro = T(0.01) )
+    /*! calcular_cor
+    **  Entrada: Posição do observador, vetor direção e um valor de erro
+    **  Saída:   A cor calculada referênte ao raio
+    **  Essa função calcula a cor referênte a interseção de menor valor não negativo
+    **  e a interação das luzes com o material naquele ponto. O valor do erro é utilizado
+    **  para que não haja problemas do raio ficar preso na cena.
+    */
+    Vec_3<T> calcular_cor ( const Vec_4<T> &origem, const Vec_3<T> &vetor, T erro = T(0.01) )
     {
         bool intersecao = false;
         bool ocorreu_intersecao = false;
@@ -24,37 +35,44 @@ public:
 
         size_t menor_dist_id;
         size_t aux_id = 0;
-        
-        Vec_3<T> pos;
+        Vec_3<T> aux_normal;
+        Vec_3<T> menor_normal;
+
+        Vec_4<T> pos_aux;
+        Vec_4<T> pos;
         Vec_3<T> normal;
         Vec_3<T> v_luz;
         Vec_3<T> difusa_calc;
         Vec_3<T> epecular_calc;
 
+        // procura se há alguma interseção válida
         for ( auto o : objetos ) {
             intersecao = false;
-            intersecao = o->intersecao( origem, vetor, aux_dist );
+            intersecao = o->intersecao( origem, vetor, aux_dist, aux_normal, pos_aux );
 
             if ( intersecao && menor_dist > aux_dist && aux_dist > erro ) {
                 ocorreu_intersecao = true;
                 menor_dist = aux_dist;
                 menor_dist_id = aux_id;
+                menor_normal = aux_normal;
+                pos = pos_aux;
             }
 
             aux_id++;
         }
 
         if ( ocorreu_intersecao ) {
-            pos = origem + ( vetor * menor_dist );
-            normal = objetos[menor_dist_id]->normal( pos );
-
+            normal = unitario( menor_normal );
+            
+            //Calcula a iteração de cada luz com o ponto achado
             for ( auto l : luzes ) {
                 v_luz = unitario( l->posicao - pos );
                 intersecao = false;
                 aux_dist = T(0);
 
+                //Verifica se há algum objeto entre o ponto e a luz analizada
                 for ( auto o : objetos ) {
-                    intersecao = o->intersecao( pos, v_luz, aux_dist );
+                    intersecao = o->intersecao( pos, v_luz, aux_dist, aux_normal, pos_aux );
 
                     if ( intersecao && aux_dist > erro ) {
                         break;
@@ -63,13 +81,15 @@ public:
                     }
                 }
 
+                //Calcula a iteração da luz analizada com o material, caso não haja nenhum
+                //objeto entre o ponto e a luz
                 if ( !intersecao ) {
                     difusa_calc += objetos[menor_dist_id]->difusa * l->calcular_difusa( pos, normal );
                     epecular_calc += objetos[menor_dist_id]->especular * l->calcular_especular( pos, normal, origem, objetos[menor_dist_id]->brilho );
                 }
             }
 
-            return ( Vec_3f( 0.2f, 0.2f, 0.2f ) * objetos[menor_dist_id]->ambiente )
+            return ( Vec_3f( 0.7f, 0.7f, 0.7f ) * objetos[menor_dist_id]->ambiente )
                    + difusa_calc
                    + epecular_calc;
         } else {

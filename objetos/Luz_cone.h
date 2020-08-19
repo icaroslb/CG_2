@@ -1,17 +1,25 @@
-#ifndef LUZ_PONTUAL_H
-#define LUZ_PONTUAL_H
+#ifndef LUZ_CONE_H
+#define LUZ_CONE_H
 
 #include "Luz.h"
 
 template <class T>
-class Luz_pontual : public Luz<T> {
+class Luz_cone : public Luz<T> {
 public:
-    /*! Luz_pontual
-    **  Entrada: Posição e a cor da luz
+    Vec_3<T> direcao;
+    T abertura;
+    T decaimento;
+    
+    /*! Luz_cone
+    **  Entrada: Posição, cor, direção e abertura da luz
     **  Saída:
+    **  Calcula tanto o ângulo em cosseno e também o fator de decaimento linear
     */
-    Luz_pontual ( const Vec_4<T> &posicao, const Vec_3<T> &cor )
+    Luz_cone ( const Vec_4<T> &posicao, const Vec_3<T> &cor, const Vec_3<T> &direcao, T abertura )
     : Luz<T>( posicao, cor )
+    , direcao( unitario( direcao ) )
+    , abertura( cos( abertura ) )
+    , decaimento( T(1) / ( T(1) - this->abertura ) )
     {}
 
     /*! Calcular_difusa
@@ -25,8 +33,13 @@ public:
         const Vec_3<T> n = normal;
         const Vec_3<T> l = unitario( Luz<T>::posicao - ponto );
 
-        if ( produto_escalar( n, l ) >= T(0) )
-            return Luz<T>::cor * produto_escalar( n, l );
+        const Vec_3<T> vetor_ponto = unitario( ponto - Luz<T>::posicao );
+        const T angulo_calc = produto_escalar( direcao, vetor_ponto );
+
+        if ( produto_escalar( n, l ) >= T(0) && angulo_calc > abertura )
+            return Luz<T>::cor
+                 * ( ( angulo_calc - abertura ) * decaimento )
+                 * produto_escalar( n, l );
         else
             return Vec_3<T>();
         
@@ -42,16 +55,20 @@ public:
     {
          //Calcula o vetor unitário da normal, o vetor apontando para o observador e do ponto à luz
         const Vec_3<T> n = normal;
-        const Vec_3<T> v = unitario( ( origem - ponto ) );
+        const Vec_3<T> v = unitario( origem - ponto );
         const Vec_3<T> l = unitario( ponto - Luz<T>::posicao );
         //Projeta o vetor da luz no vetor normal, inverte e usa-o para espelhar o vetor da luz
         const Vec_3<T> l_proj = -projecao_unitario( l, n );
         const Vec_3<T> l_l = l + ( T(2) * l_proj );
 
+        const Vec_3<T> vetor_ponto = unitario( ponto - Luz<T>::posicao );
+        const T angulo_calc = produto_escalar( direcao, vetor_ponto );
+
+
         //Se a luz não estiver atrás da face e o observador estiver recebendo alguma contribuição
         //da especular, calcula.
-        if ( produto_escalar( n, l ) <= T(0) && produto_escalar( v, l_l ) >= T(0) )
-            return Luz<T>::cor * T( pow( produto_escalar( v, l_l ), brilho ) );
+        if ( produto_escalar( n, l ) <= T(0) && produto_escalar( v, l_l ) >= T(0) && angulo_calc > abertura )
+            return Luz<T>::cor * ( ( angulo_calc - abertura ) * decaimento ) * T( pow( produto_escalar( v, l_l ), brilho ) );
         else
             return Vec_3<T>();
     }

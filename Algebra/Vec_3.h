@@ -4,6 +4,9 @@
 #include <iostream>
 
 template <class T>
+class Vec_4;
+
+template <class T>
 class Vec_3 {
 public:
 	

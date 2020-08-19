@@ -48,7 +48,7 @@ template <class T>
 T& Matriz_3<T>::operator () ( const size_t linha,  const size_t coluna )
 {
 	if ( coluna < 3 && linha < 3 )
-		return _val[ linha + ( coluna * 3 ) ];
+		return _val[ ( linha * 3 ) + coluna ];
 }
 /*===============================================================================================================================*/
 template <class T>
@@ -80,7 +80,7 @@ Matriz_3<T> Matriz_3<T>::operator * ( const Matriz_3<T> &m ) {
 	for ( size_t i = 0; i < 3; i++ ) {
 		for ( size_t j = 0; j < 3; j++ ) {
 			for ( size_t k = 0; k < 3; k++ ) {
-				mat._val[ i + (j * 3) ] += _val [ i + (k * 3) ] * m._val[ (j * 3) + k ];
+				mat._val[ ( i * 3 ) + j ] += _val [ ( i * 3 ) + k ] * m._val[ j + ( k * 3 ) ];
 			}
 		}
 	}
@@ -92,9 +92,9 @@ template <class T>
 Vec_3<T> Matriz_3<T>::operator * ( const Vec_3<T> &v ) {
 	Vec_3<T> vet;
 	
-	vet._x = ( _val[ 0 ] * v._x ) + ( _val[ 3 ] * v._y ) + ( _val[ 6 ] * v._z );
-	vet._y = ( _val[ 1 ] * v._x ) + ( _val[ 4 ] * v._y ) + ( _val[ 7 ] * v._z );
-	vet._z = ( _val[ 2 ] * v._x ) + ( _val[ 5 ] * v._y ) + ( _val[ 8 ] * v._z );
+	vet._x = ( _val[ 0 ] * v._x ) + ( _val[ 1 ] * v._y ) + ( _val[ 2 ] * v._z );
+	vet._y = ( _val[ 3 ] * v._x ) + ( _val[ 4 ] * v._y ) + ( _val[ 5 ] * v._z );
+	vet._z = ( _val[ 6 ] * v._x ) + ( _val[ 7 ] * v._y ) + ( _val[ 8 ] * v._z );
 	
 	return vet;
 }
@@ -176,7 +176,7 @@ Matriz_3<T>& Matriz_3<T>::operator *= ( const Matriz_3<T> &m ) {
 	for ( size_t i = 0; i < 3; i++ ) {
 		for ( size_t j = 0; j < 3; j++ ) {
 			for ( size_t k = 0; k < 3; k++ ) {
-				mat._val[ i + (j * 3) ] += _val [ i + (k * 3) ] * m._val[ (j * 3) + k ];
+				mat._val[ ( i * 3 ) + j ] += _val [ ( i * 3 ) + k ] * m._val[ j + ( k * 3 ) ];
 			}
 		}
 	}
@@ -239,8 +239,8 @@ Matriz_3<T> Matriz_3<T>::transposta () {
 /*===============================================================================================================================*/
 template <class T>	
 Matriz_3<T> operator + ( T c , const Matriz_3<T> &m ) {
-	Matriz_3<T> mat;
-	
+	Matriz_3<T> mat( m._val );
+
 	for ( size_t i = 0; i < 9; i += 4 )
 		mat._val[i] = c + m._val[i];
 	
@@ -250,9 +250,12 @@ Matriz_3<T> operator + ( T c , const Matriz_3<T> &m ) {
 template <class T>	
 Matriz_3<T> operator - ( T c , const Matriz_3<T> &m ) {
 	Matriz_3<T> mat;
-	
+
+	for ( size_t i = 0; i < 9; i++ )
+		mat._val[i] = -m._val[i];
+
 	for ( size_t i = 0; i < 9; i += 4 )
-		mat._val[i] = c - m._val[i];
+		mat._val[i] += c;
 	
 	return mat;
 }
@@ -277,22 +280,18 @@ Matriz_3<T>& operator << ( Matriz_3<T> &mat, T dado ) {
 /*===============================================================================================================================*/
 template <class T>	
 Matriz_3<T>& operator , ( Matriz_3<T> &mat, T dado ) {
-	static size_t indice = 3;
+	static size_t indice = 1;
 	static auto   id_matriz  = &mat;
-	T aux;
 	
 	if ( id_matriz != &mat ) {
-		indice = 3;
+		indice = 1;
 		id_matriz = &mat;
 	}
 	
 	mat._val[indice] = dado;
 	
-	indice += 3;
-	
-	if ( indice > ( aux = ( indice % 9 ) ) ) {
-		indice = ++aux;
-	}
+	indice++;
+	indice = indice % 9;
 	
 	return mat;
 }
@@ -301,9 +300,9 @@ template <class T>
 std::ostream& operator << ( std::ostream &out, const Matriz_3<T> &mat ) {
 	out << std::endl;
 	for ( size_t i = 0; i < 3; i++ ) {
-		out << "[ " << mat._val[i];
+		out << "[ " << mat._val[i * 3];
 		for ( size_t j = 1; j < 3; j++ ) {
-			out << ", " << mat._val[i + ( j * 3 )];
+			out << ", " << mat._val[( i * 3 ) + j];
 		}
 		out << " ]" << std::endl;
 	}

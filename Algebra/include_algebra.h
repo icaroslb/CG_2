@@ -3,5 +3,6 @@
 
 #include "algebra_vetor.h"
 #include "algebra_matriz.h"
+#include "Operacoes.h"
 
 #endif

@@ -8,7 +8,9 @@
 #include "camera/Canvas.h"
 
 #include "objetos/Esfera.h"
+
 #include "objetos/Luz_pontual.h"
+#include "objetos/Luz_cone.h"
 
 int main (int argc, char *argv[]) {
     Camera<float> camera( Vec_3f(  0.0f,  0.0f,  0.0f ), // Posição
@@ -34,14 +36,14 @@ int main (int argc, char *argv[]) {
 	Vec_3f vetor(0.0f, 0.0f, 1.0f);
 	float t = 0;
 
-	Esfera<float> *teste_o_1 = new Esfera<float>( Vec_3f( 0.0f, 0.0f, 5.0f )
+	Esfera<float> *teste_o_1 = new Esfera<float>( Vec_4f( 0.0f, 0.0f, 5.0f, 1.0f )
 	                                            , 4.0f
 	                                            , Vec_3f( 0.0215f, 0.1745f, 0.0215f )
 												, Vec_3f( 0.07568f, 0.61424f, 0.07568f )
 												, Vec_3f( 0.633f, 0.727811f, 0.633f )
 												, 0.6 );
 
-	Esfera<float> *teste_o_2 = new Esfera<float>( Vec_3f( 0.0f, 5.0f, 2.0f )
+	Esfera<float> *teste_o_2 = new Esfera<float>( Vec_4f( 0.0f, 5.0f, 2.0f, 1.0f )
 	                                            , 2.0f
 	                                            , Vec_3f( 0.1745f, 0.01175f, 0.01175f )
 												, Vec_3f( 0.61424f, 0.04136f, 0.04136f )
@@ -49,14 +51,33 @@ int main (int argc, char *argv[]) {
 												, 0.6
 												);
 
-	Luz_pontual<float> *teste_l = new Luz_pontual<float>( Vec_3f( 0.0f, 20.0f, 0.0f )
-	                                                    , Vec_3f( 1.0f, 1.0f, 1.0f )
-														);
+	Luz_pontual<float> *teste_l_1 = new Luz_pontual<float>( Vec_4f( 0.0f, 20.0f, -10.0f, 1.0f )
+	                                                      , Vec_3f( 1.0f, 1.0f, 1.0f )
+														  );
+
+	Luz_cone<float> *teste_l_2 = new Luz_cone<float>( Vec_4f( 0.0f, 10.0f, 0.0f, 1.0f )
+	                                                , Vec_3f( 1.0f, 1.0f, 1.0f )
+													, Vec_3f( -1.0f, -1.0f, 0.0f )
+													, float(M_PI_4 * 0.25)
+													);
 	
 	mundo.objetos.push_back( (Objeto<float>*)teste_o_1 );
 	mundo.objetos.push_back( (Objeto<float>*)teste_o_2 );
-	mundo.luzes.push_back( (Luz<float>*)teste_l );
+	mundo.luzes.push_back( (Luz<float>*)teste_l_1 );
+	mundo.luzes.push_back( (Luz<float>*)teste_l_2 );
 
+	mundo.objetos[0]->matriz_tranformacao = rotacionar( Ori_transf::xy, float(M_PI_4) )
+										  * escalar( 1.0f, 2.0f, 1.0f );
+	mundo.objetos[0]->matriz_tranformacao_inversa = escalar( 1.0f, 1.0f / 2.0f, 1.0f )
+												  * rotacionar( Ori_transf::xy, float(-M_PI_4) );
+	
+	mundo.objetos[1]->matriz_tranformacao = transladar( 0.0f, 0.0f, 0.0f )
+	                                       * escalar( 2.0f, 0.0f, 1.0f );
+	mundo.objetos[1]->matriz_tranformacao_inversa = transladar( 0.0f, -0.0f, -0.0f )
+	                                               * escalar( 1.0f / 2.0f, 1.0f, 1.0f );
+
+	//teste_o_1->posicao = teste_o_1->matriz_tranformacao * teste_o_1->posicao;
+	//teste_o_2->posicao = teste_o_2->matriz_tranformacao * teste_o_2->posicao;
 	while ( loop ) {
 
 		while ( SDL_PollEvent( &evento ) ) {
@@ -70,7 +91,12 @@ int main (int argc, char *argv[]) {
 
 		glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
-		teste_l->posicao._z = float( sin( t ) ) * 10.0f;
+		teste_l_2->posicao._x = float( cos( t ) ) * 20.0f;
+		//teste_l->posicao._y = float( sin( t ) ) * 20.0f;
+		teste_l_2->posicao._z = float( sin( t ) ) * 20.0f;
+
+		teste_l_2->direcao = unitario( teste_o_1->posicao - teste_l_2->posicao );
+
 
 		for ( int i = canvas.altura - 1; i >= 0 ; i-- ) {
 			for ( int j = 0; j < canvas.largura; j++ ) {
@@ -79,7 +105,7 @@ int main (int argc, char *argv[]) {
 				vetor._z = 100.0f;
 				vetor = unitario( vetor );
 				
-				canvas(i, j) = mundo.calcular_cor( Vec_3f( 0.0f, 0.0f, -20.0f ), vetor );
+				canvas(i, j) = mundo.calcular_cor( Vec_4f( 0.0f, 0.0f, -20.0f, 1.0f ), vetor, 0.0001f );
 			}	
 		}
 
@@ -88,7 +114,7 @@ int main (int argc, char *argv[]) {
 
 		tela.swap_tela();
 
-		t += 0.05f;
+		t += 0.1f;
 	}
 
     return 0;

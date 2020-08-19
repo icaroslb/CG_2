@@ -2,6 +2,7 @@
 #define VEC_2_H
 
 #include <iostream>
+#include <cstring>
 
 template <class T>
 class Vec_2 {
