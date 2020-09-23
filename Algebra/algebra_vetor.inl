@@ -293,3 +293,16 @@ T truncagem ( T valor, T valor_max, T valor_min )
 	return valor;
 }
 /*===============================================================================================================================*/
+template <class T>
+Vec_3<T> inverter_vetor ( const Vec_3<T> &vetor, const Vec_3<T> &normal )
+{
+	 //Calcula o vetor unitário da normal, o vetor apontando para o observador e do ponto à luz
+    const Vec_3<T> n = normal;
+    const Vec_3<T> v = unitario( vetor );
+    //Projeta o vetor da luz no vetor normal, inverte e usa-o para espelhar o vetor da luz
+    const Vec_3<T> v_proj = -projecao_unitario( v, n );
+    const Vec_3<T> vetor_invertido = v + ( T(2) * v_proj );
+
+	return vetor_invertido;
+}
+/*===============================================================================================================================*/

@@ -62,6 +62,9 @@ template <class T> T pseudoangulo ( const Vec_4<T> &v );
 template <class T> T truncagem ( T valor );
 template <class T> T truncagem ( T valor, T valor_max, T valor_min );
 
+
+template <class T> Vec_3<T> inverter_vetor ( const Vec_3<T> &vetor, const Vec_3<T> &normal );
+
 #include "algebra_vetor.inl"
 
 #endif

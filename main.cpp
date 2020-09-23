@@ -95,6 +95,8 @@ int main (int argc, char *argv[]) {
 		//teste_l->posicao._y = float( sin( t ) ) * 20.0f;
 		teste_l_2->posicao._z = float( sin( t ) ) * 20.0f;
 
+		teste_o_2->posicao._z = float( sin( t ) ) * 2.0f;
+
 		teste_l_2->direcao = unitario( teste_o_1->posicao - teste_l_2->posicao );
 
 
@@ -105,7 +107,8 @@ int main (int argc, char *argv[]) {
 				vetor._z = 100.0f;
 				vetor = unitario( vetor );
 				
-				canvas(i, j) = mundo.calcular_cor( Vec_4f( 0.0f, 0.0f, -20.0f, 1.0f ), vetor, 0.0001f );
+				//canvas(i, j) = mundo.calcular_cor( Vec_4f( 0.0f, 0.0f, -20.0f, 1.0f ), vetor, 0.0001f );
+				canvas(i, j) = mundo.calcular_cor_recusivo( Vec_4f( 0.0f, 0.0f, -20.0f, 1.0f ), vetor, 2, 0.00001f );
 			}	
 		}
 

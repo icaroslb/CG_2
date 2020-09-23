@@ -53,6 +53,7 @@ public:
 	Vec_4<T>& operator /= ( T c );
 
 	operator Vec_3<T> () { return Vec_3<T>( _x, _y, _z ); }
+	operator Vec_3<T> () const { return Vec_3<T>( _x, _y, _z ); }
 
 };
 
@@ -62,8 +63,8 @@ typedef Vec_4<double> Vec_4d;
 template <class T> Vec_4<T> operator + ( const Vec_4<T> &v );
 template <class T> Vec_4<T> operator - ( const Vec_4<T> &v );
 template <class T> Vec_4<T> operator * ( T c, const Vec_4<T> &v );
-template <class T> Vec_4<T>& operator << ( Vec_2<T> &vet, T dado );
-template <class T> Vec_4<T>& operator ,  ( Vec_2<T> &vet, T dado );
+template <class T> Vec_4<T>& operator << ( Vec_4<T> &vet, T dado );
+template <class T> Vec_4<T>& operator ,  ( Vec_4<T> &vet, T dado );
 template <class T> std::ostream& operator << ( std::ostream &os, const Vec_4<T> &v );
 
 template <class T> Vec_4<T>  operator + ( const Vec_3<T> &v3, const Vec_4<T> &v4 );
