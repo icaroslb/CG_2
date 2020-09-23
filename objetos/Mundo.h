@@ -120,6 +120,8 @@ public:
 
         Vec_3<T> cor_calculada;
         Vec_3<T> cor_recursiva;
+
+        Vec_3<T> vetor_invertido;
         
         // procura se há alguma interseção válida
         for ( auto o : objetos ) {
@@ -170,7 +172,9 @@ public:
                             + epecular_calc;
             
             if ( rec < max_r ) {
-                cor_recursiva = calcular_cor_recusivo( pos, inverter_vetor( vetor, normal ), erro, max_r, ++rec );
+                vetor_invertido = inverter_vetor( vetor, normal );
+                cor_recursiva = objetos[menor_dist_id]->difusa
+                              * calcular_cor_recusivo( pos, vetor_invertido, erro, max_r, ++rec );
             }
         } else {
             cor_calculada = Vec_3<T>();
