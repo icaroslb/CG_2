@@ -178,17 +178,21 @@ public:
             
             if ( rec < 5 ) {
                 vetor_refletido = vetor_reflexao( vetor, normal );
-                //vetor_refracionado = vetor_refracao( vetor, normal, T(1), T(1) );
+                vetor_refracionado = vetor_refracao( vetor, normal, T(1), T(1) );
 
                 cor_recursiva_reflexao = objetos[menor_dist_id]->difusa
                                        * calcular_cor_recusivo( pos, vetor_refletido, erro, max_r, rec + 1 );
                 
-                //cor_recursiva_refracao = calcular_cor_recusivo( pos, vetor_refracionado, erro, max_r, rec + 1 );
+                if ( objetos[menor_dist_id]->transparencia > erro ) {
+                    cor_recursiva_refracao = objetos[menor_dist_id]->transparencia
+                                           * calcular_cor_recusivo( pos, vetor_refracionado, erro, max_r, rec + 1 );
+                    cor_calculada *= T(1) - objetos[menor_dist_id]->transparencia;
+                }
             }
 
         }
 
-        return cor_calculada + cor_recursiva_reflexao;// + cor_recursiva_refracao;
+        return cor_calculada + cor_recursiva_reflexao + cor_recursiva_refracao;
     }
 
 };
