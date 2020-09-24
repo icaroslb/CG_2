@@ -294,7 +294,7 @@ T truncagem ( T valor, T valor_max, T valor_min )
 }
 /*===============================================================================================================================*/
 template <class T>
-Vec_3<T> inverter_vetor ( const Vec_3<T> &vetor, const Vec_3<T> &normal )
+Vec_3<T> vetor_reflexao ( const Vec_3<T> &vetor, const Vec_3<T> &normal )
 {
 	 //Calcula o vetor unitário da normal, o vetor apontando para o observador e do ponto à luz
     const Vec_3<T> n = normal;
@@ -304,5 +304,17 @@ Vec_3<T> inverter_vetor ( const Vec_3<T> &vetor, const Vec_3<T> &normal )
     const Vec_3<T> vetor_invertido = v + ( T(2) * v_proj );
 
 	return vetor_invertido;
+}
+/*===============================================================================================================================*/
+template <class T>
+Vec_3<T> vetor_refracao ( const Vec_3<T> &vetor, const Vec_3<T> &normal, T indice_meio_1, T indice_meio_2 )
+{
+	T divisao_indices_meios = indice_meio_1 / indice_meio_2;
+	T angulo_v_n = produto_escalar( vetor, normal );
+	T sen_ang_2 = ( indice_meio_1 * indice_meio_1 ) * ( 1 - ( angulo_v_n * angulo_v_n ) );
+
+	return ( vetor * angulo_v_n )
+	     + ( ( divisao_indices_meios * angulo_v_n )
+		   - T( sqrt( 1 - sen_ang_2 ) ) ) * normal;
 }
 /*===============================================================================================================================*/

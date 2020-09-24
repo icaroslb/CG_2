@@ -98,7 +98,7 @@ public:
     }
 
 
-    Vec_3<T> calcular_cor_recusivo ( const Vec_4<T> &origem, const Vec_3<T> &vetor, int max_r = 1, T erro = T(0.01), int rec = 1 )
+    Vec_3<T> calcular_cor_recusivo ( const Vec_4<T> &origem, const Vec_3<T> &vetor, T erro = T(0.01), int max_r = 0, int rec = 0 )
     {
         bool intersecao = false;
         bool ocorreu_intersecao = false;
@@ -115,13 +115,16 @@ public:
         Vec_4<T> pos;
         Vec_3<T> normal;
         Vec_3<T> v_luz;
+        Vec_3<T> ambiente_calc;
         Vec_3<T> difusa_calc;
         Vec_3<T> epecular_calc;
 
         Vec_3<T> cor_calculada;
-        Vec_3<T> cor_recursiva;
+        Vec_3<T> cor_recursiva_reflexao;
+        Vec_3<T> cor_recursiva_refracao;
 
-        Vec_3<T> vetor_invertido;
+        Vec_3<T> vetor_refletido;
+        Vec_3<T> vetor_refracionado;
         
         // procura se há alguma interseção válida
         for ( auto o : objetos ) {
@@ -167,20 +170,25 @@ public:
                 }
             }
 
-            cor_calculada = ( Vec_3f( 0.7f, 0.7f, 0.7f ) * objetos[menor_dist_id]->ambiente )
-                            + difusa_calc
-                            + epecular_calc;
+            ambiente_calc = Vec_3f( 0.7f, 0.7f, 0.7f ) * objetos[menor_dist_id]->ambiente;
+
+            cor_calculada = ambiente_calc
+                          + difusa_calc
+                          + epecular_calc;
             
-            if ( rec < max_r ) {
-                vetor_invertido = inverter_vetor( vetor, normal );
-                cor_recursiva = objetos[menor_dist_id]->difusa
-                              * calcular_cor_recusivo( pos, vetor_invertido, erro, max_r, ++rec );
+            if ( rec < 5 ) {
+                vetor_refletido = vetor_reflexao( vetor, normal );
+                //vetor_refracionado = vetor_refracao( vetor, normal, T(1), T(1) );
+
+                cor_recursiva_reflexao = objetos[menor_dist_id]->difusa
+                                       * calcular_cor_recusivo( pos, vetor_refletido, erro, max_r, rec + 1 );
+                
+                //cor_recursiva_refracao = calcular_cor_recusivo( pos, vetor_refracionado, erro, max_r, rec + 1 );
             }
-        } else {
-            cor_calculada = Vec_3<T>();
+
         }
 
-        return cor_calculada + cor_recursiva;
+        return cor_calculada + cor_recursiva_reflexao;// + cor_recursiva_refracao;
     }
 
 };

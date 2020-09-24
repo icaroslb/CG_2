@@ -55,7 +55,7 @@ int main (int argc, char *argv[]) {
 	                                                      , Vec_3f( 1.0f, 1.0f, 1.0f )
 														  );
 
-	Luz_cone<float> *teste_l_2 = new Luz_cone<float>( Vec_4f( 0.0f, 10.0f, 0.0f, 1.0f )
+	Luz_cone<float> *teste_l_2 = new Luz_cone<float>( Vec_4f( 0.0f, -50.0f, 0.0f, 1.0f )
 	                                                , Vec_3f( 1.0f, 1.0f, 1.0f )
 													, Vec_3f( -1.0f, -1.0f, 0.0f )
 													, float(M_PI_4 * 0.25)
@@ -64,7 +64,7 @@ int main (int argc, char *argv[]) {
 	mundo.objetos.push_back( (Objeto<float>*)teste_o_1 );
 	mundo.objetos.push_back( (Objeto<float>*)teste_o_2 );
 	mundo.luzes.push_back( (Luz<float>*)teste_l_1 );
-	//mundo.luzes.push_back( (Luz<float>*)teste_l_2 );
+	mundo.luzes.push_back( (Luz<float>*)teste_l_2 );
 
 	mundo.objetos[0]->matriz_tranformacao = rotacionar( Ori_transf::xy, float(M_PI_4) )
 										  * escalar( 1.0f, 2.0f, 1.0f );
@@ -91,9 +91,9 @@ int main (int argc, char *argv[]) {
 
 		glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
-		teste_l_2->posicao._x = float( cos( t ) ) * 20.0f;
+		//teste_l_2->posicao._x = float( cos( t ) ) * 20.0f;
 		//teste_l->posicao._y = float( sin( t ) ) * 20.0f;
-		teste_l_2->posicao._z = float( sin( t ) ) * 20.0f;
+		//teste_l_2->posicao._z = float( sin( t ) ) * 20.0f;
 
 		teste_o_2->posicao._z = float( sin( t ) ) * 2.0f;
 
@@ -108,7 +108,7 @@ int main (int argc, char *argv[]) {
 				vetor = unitario( vetor );
 				
 				//canvas(i, j) = mundo.calcular_cor( Vec_4f( 0.0f, 0.0f, -20.0f, 1.0f ), vetor, 0.0001f );
-				canvas(i, j) = mundo.calcular_cor_recusivo( Vec_4f( 0.0f, 0.0f, -20.0f, 1.0f ), vetor, 2, 0.00001f );
+				canvas(i, j) = mundo.calcular_cor_recusivo( Vec_4f( 0.0f, 0.0f, -20.0f, 1.0f ), vetor, 0.000001f, 5 );
 			}	
 		}
 
