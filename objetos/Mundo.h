@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <limits>
+#include <random>
 #include "Objeto.h"
 #include "Luz.h"
 
@@ -193,6 +194,41 @@ public:
         }
 
         return cor_calculada + cor_recursiva_reflexao + cor_recursiva_refracao;
+    }
+
+    Vec_3<T> calcular_cor_recusivo_sample ( const Vec_4<T> &origem, T x_min, T x_max, T y_min, T y_max, T z, T erro = T(0.01), int qtd_sample = 1, int max_r = 0, int rec = 0 )
+    {
+
+        Vec_3<T> cor_calculada;
+        Vec_3<T> vetor;
+        static std::random_device r_d;
+
+        T dif_x = x_max - x_min;
+        T dif_y = y_max - y_min;
+
+        T random_x;
+        T random_y;
+
+        //int qtd_sample_2 = qtd_sample * qtd_sample;
+
+        for ( int i = 0; i < qtd_sample; i++ ) {
+            random_x = T(r_d()) / T(r_d.max());
+            random_y = T(r_d()) / T(r_d.max());
+            
+            vetor._x = ( random_x * dif_x ) + x_min;
+            vetor._y = ( random_y * dif_x ) + y_min;
+            vetor._z = z;
+
+            vetor = unitario( vetor );
+            
+            cor_calculada += calcular_cor_recusivo( origem, vetor, erro, max_r, rec );
+        }
+
+        if ( qtd_sample > 1 )
+            cor_calculada /= T(qtd_sample);
+
+        return cor_calculada;
+
     }
 
 };

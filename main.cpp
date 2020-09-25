@@ -28,12 +28,13 @@ int main (int argc, char *argv[]) {
 	bool loop = true;
 
 	Mundo<float> mundo;
-	Canvas<float> canvas( 1000, 1000, opengl );
+	Canvas<float> canvas( 500, 500, opengl );
 
 	printf( "Versão do OpenGl: %s\n", tela.obter_versao_opengl() );
 
 	Vec_3f cor;
-	Vec_3f vetor(0.0f, 0.0f, 1.0f);
+	Vec_3f vetor( 0.0f, 0.0f, 1.0f );
+	Vec_4f origem( 0.0f, 0.0f, -20.0f, 1.0f );
 	float t = 0;
 
 	Esfera<float> *teste_o_1 = new Esfera<float>( Vec_4f( 0.0f, 0.0f, 5.0f, 1.0f )
@@ -105,14 +106,24 @@ int main (int argc, char *argv[]) {
 
 		for ( int i = canvas.altura - 1; i >= 0 ; i-- ) {
 			for ( int j = 0; j < canvas.largura; j++ ) {
+				#if 0
 				vetor._x = -( 50.0f ) + ( 50.0f / canvas.largura ) + ( float(j) * 100.0f / canvas.largura );
 				vetor._y =  ( 50.0f ) - ( 50.0f / canvas.altura ) - ( float(i) * 100.0f / canvas.altura );
 				vetor._z = 100.0f;
 				vetor = unitario( vetor );
+
+				//canvas(i, j) = mundo.calcular_cor( origem, vetor, 0.0001f );
+				canvas(i, j) = mundo.calcular_cor_recusivo( origem, vetor, 0.000001f, 5 );
+				#else
+				float x_min = -( 50.0f ) + ( float(j) * 100.0f / canvas.largura );
+				float x_max = -( 50.0f ) + ( float(j + 1) * 100.0f / canvas.largura );
+				float y_min =  ( 50.0f ) - ( float(i) * 100.0f / canvas.altura );
+				float y_max =  ( 50.0f ) - ( float(i + 1) * 100.0f / canvas.altura );
+				float z = 100.0f; 
 				
-				//canvas(i, j) = mundo.calcular_cor( Vec_4f( 0.0f, 0.0f, -20.0f, 1.0f ), vetor, 0.0001f );
-				canvas(i, j) = mundo.calcular_cor_recusivo( Vec_4f( 0.0f, 0.0f, -20.0f, 1.0f ), vetor, 0.000001f, 5 );
-			}	
+				canvas(i, j) = mundo.calcular_cor_recusivo_sample( origem, x_min, x_max, y_min, y_max, z, 0.000001f, 1, 5 );
+				#endif
+			}
 		}
 
 		canvas.atualizar();
@@ -121,6 +132,7 @@ int main (int argc, char *argv[]) {
 		tela.swap_tela();
 
 		t += 0.1f;
+		while(true);
 	}
 
     return 0;
