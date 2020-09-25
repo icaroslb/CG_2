@@ -132,7 +132,6 @@ int main (int argc, char *argv[]) {
 		tela.swap_tela();
 
 		t += 0.1f;
-		while(true);
 	}
 
     return 0;
