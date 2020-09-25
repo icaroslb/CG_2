@@ -8,6 +8,7 @@
 #include "camera/Canvas.h"
 
 #include "objetos/Esfera.h"
+#include "objetos/Face.h"
 
 #include "objetos/Luz_pontual.h"
 #include "objetos/Luz_cone.h"
@@ -54,6 +55,16 @@ int main (int argc, char *argv[]) {
 												, 0.6f
 												, 0.8f
 												);
+	
+	Face<float> *teste_o_3 = new Face<float>( Vec_4f( -3.0f, -3.0f, 0.0f, 1.0f )
+	                                        , Vec_4f(  3.0f, -3.0f, 0.0f, 1.0f )
+											, Vec_4f(  0.0f,  3.0f, 0.0f, 1.0f )
+	                                        , Vec_3f( 0.19225f, 0.19225f, 0.19225f )
+											, Vec_3f( 0.50754f, 0.50754f, 0.50754f )
+											, Vec_3f( 0.508273f, 0.508273f, 0.508273f )
+											, 0.4f
+											, 1.0f
+											);
 
 	Luz_pontual<float> *teste_l_1 = new Luz_pontual<float>( Vec_4f( -20.0f, 0.0f, -10.0f, 1.0f )//Vec_4f( 0.0f, 20.0f, -10.0f, 1.0f )
 	                                                      , Vec_3f( 1.0f, 1.0f, 1.0f )
@@ -67,6 +78,7 @@ int main (int argc, char *argv[]) {
 	
 	mundo.objetos.push_back( (Objeto<float>*)teste_o_1 );
 	mundo.objetos.push_back( (Objeto<float>*)teste_o_2 );
+	mundo.objetos.push_back( (Objeto<float>*)teste_o_3 );
 	mundo.luzes.push_back( (Luz<float>*)teste_l_1 );
 	mundo.luzes.push_back( (Luz<float>*)teste_l_2 );
 
@@ -106,14 +118,14 @@ int main (int argc, char *argv[]) {
 
 		for ( int i = canvas.altura - 1; i >= 0 ; i-- ) {
 			for ( int j = 0; j < canvas.largura; j++ ) {
-				#if 0
+				#if 1
 				vetor._x = -( 50.0f ) + ( 50.0f / canvas.largura ) + ( float(j) * 100.0f / canvas.largura );
 				vetor._y =  ( 50.0f ) - ( 50.0f / canvas.altura ) - ( float(i) * 100.0f / canvas.altura );
 				vetor._z = 100.0f;
 				vetor = unitario( vetor );
 
 				//canvas(i, j) = mundo.calcular_cor( origem, vetor, 0.0001f );
-				canvas(i, j) = mundo.calcular_cor_recusivo( origem, vetor, 0.000001f, 5 );
+				canvas(i, j) = mundo.calcular_cor_recusivo( origem, vetor, 0.0001f, 5 );
 				#else
 				float x_min = -( 50.0f ) + ( float(j) * 100.0f / canvas.largura );
 				float x_max = -( 50.0f ) + ( float(j + 1) * 100.0f / canvas.largura );
@@ -121,7 +133,7 @@ int main (int argc, char *argv[]) {
 				float y_max =  ( 50.0f ) - ( float(i + 1) * 100.0f / canvas.altura );
 				float z = 100.0f; 
 				
-				canvas(i, j) = mundo.calcular_cor_recusivo_sample( origem, x_min, x_max, y_min, y_max, z, 0.000001f, 1, 5 );
+				canvas(i, j) = mundo.calcular_cor_recusivo_sample( origem, x_min, x_max, y_min, y_max, z, 0.0001f, 1, 5 );
 				#endif
 			}
 		}
