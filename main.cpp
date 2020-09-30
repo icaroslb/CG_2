@@ -21,9 +21,9 @@ int main (int argc, char *argv[]) {
 	                      -5.0f, 5.0f,                   // Baixo e cima
 	                      -1.0f, 1.0f, ORTHO );          // Near, far e o tipo de visão*
     
-    Engine_SDL tela( "Projeto", 500, 500 );
+    Engine_SDL tela( "CG 2", 500, 500 );
 	Engine_OpenGl opengl;
-	Shader shader( "shaders/shader.vs", "shaders/shader.fs" );
+	Shader shader( "../shaders/shader.vs", "../shaders/shader.fs" );
 	
 	SDL_Event evento;
 	bool loop = true;
