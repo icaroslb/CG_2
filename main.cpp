@@ -38,7 +38,7 @@ int main (int argc, char *argv[]) {
 	Vec_4f origem( 0.0f, 0.0f, -20.0f, 1.0f );
 	float t = 0;
 
-	Esfera<float> *teste_o_1 = new Esfera<float>( Vec_4f( 0.0f, 0.0f, 5.0f, 1.0f )
+	Esfera<float> *teste_o_1 = new Esfera<float>( Vec_4f( 0.0f, 0.0f, 0.0f, 1.0f )
 	                                            , 4.0f
 	                                            , Vec_3f( 0.19225f, 0.19225f, 0.19225f )//Vec_3f( 0.0215f, 0.1745f, 0.0215f )
 												, Vec_3f( 0.50754f, 0.50754f, 0.50754f )//Vec_3f( 0.07568f, 0.61424f, 0.07568f )
@@ -47,7 +47,7 @@ int main (int argc, char *argv[]) {
 												, 0.0f
 												);
 
-	Esfera<float> *teste_o_2 = new Esfera<float>( Vec_4f( 0.0f, 5.0f, 2.0f, 1.0f )
+	Esfera<float> *teste_o_2 = new Esfera<float>( Vec_4f( 0.0f, 0.0f, 0.0f, 1.0f )
 	                                            , 2.0f
 	                                            , Vec_3f( 0.1745f, 0.01175f, 0.01175f )
 												, Vec_3f( 0.61424f, 0.04136f, 0.04136f )
@@ -82,15 +82,18 @@ int main (int argc, char *argv[]) {
 	mundo.luzes.push_back( (Luz<float>*)teste_l_1 );
 	mundo.luzes.push_back( (Luz<float>*)teste_l_2 );
 
-	mundo.objetos[0]->matriz_tranformacao = rotacionar( Ori_transf::xy, float(M_PI_4) )
+	mundo.objetos[0]->matriz_tranformacao = transladar( 0.0f, 0.0f, 5.0f )
+	                                      * rotacionar( Ori_transf::xy, float(M_PI_4) )
 										  * escalar( 1.0f, 2.0f, 1.0f );
-	mundo.objetos[0]->matriz_tranformacao_inversa = escalar( 1.0f, 1.0f / 2.0f, 1.0f )
-												  * rotacionar( Ori_transf::xy, float(-M_PI_4) );
+	mundo.objetos[0]->matriz_tranformacao_inversa = inversa_TRS( 1.0f, 2.0f, 1.0f,
+	                                                             Ori_transf::xy, float(M_PI_4),
+															     0.0f, 0.0f, 5.0f );
 	
-	mundo.objetos[1]->matriz_tranformacao = transladar( 0.0f, 0.0f, 0.0f )
-	                                       * escalar( 2.0f, 0.0f, 1.0f );
-	mundo.objetos[1]->matriz_tranformacao_inversa = transladar( 0.0f, -0.0f, -0.0f )
-	                                               * escalar( 1.0f / 2.0f, 1.0f, 1.0f );
+	mundo.objetos[1]->matriz_tranformacao = transladar( 0.0f, 5.0f, 0.0f )
+	                                       * escalar( 2.0f, 1.0f, 1.0f );
+	mundo.objetos[1]->matriz_tranformacao_inversa = inversa_TRS( 2.0f, 1.0f, 1.0f,
+	                                                             Ori_transf::xy, 0.0f,
+																 0.0f, 5.0f, 0.0f );
 
 	//teste_o_1->posicao = teste_o_1->matriz_tranformacao * teste_o_1->posicao;
 	//teste_o_2->posicao = teste_o_2->matriz_tranformacao * teste_o_2->posicao;
@@ -111,10 +114,15 @@ int main (int argc, char *argv[]) {
 		//teste_l->posicao._y = float( sin( t ) ) * 20.0f;
 		//teste_l_2->posicao._z = float( sin( t ) ) * 20.0f;
 
-		teste_o_2->posicao._z = float( sin( t ) ) * 2.0f;
+		//teste_o_2->posicao._z = float( sin( t ) ) * 2.0f;
 
-		teste_l_2->direcao = unitario( teste_o_1->posicao - teste_l_2->posicao );
+		//teste_l_2->direcao = unitario( teste_o_1->posicao - teste_l_2->posicao );
 
+		mundo.objetos[1]->matriz_tranformacao = transladar( 0.0f, 5.0f, float( sin( t ) ) * 2.0f )
+	                                          * escalar( 2.0f, 1.0f, 1.0f );
+		mundo.objetos[1]->matriz_tranformacao_inversa = inversa_TRS( 2.0f, 1.0f, 1.0f,
+	                                                             Ori_transf::xy, 0.0f,
+																 0.0f, 5.0f, float( sin( t ) ) * 2.0f );
 
 		for ( int i = canvas.altura - 1; i >= 0 ; i-- ) {
 			for ( int j = 0; j < canvas.largura; j++ ) {
