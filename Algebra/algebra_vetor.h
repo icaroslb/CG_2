@@ -62,6 +62,10 @@ template <class T> T pseudoangulo ( const Vec_4<T> &v );
 template <class T> T truncagem ( T valor );
 template <class T> T truncagem ( T valor, T valor_max, T valor_min );
 
+
+template <class T> Vec_3<T> vetor_reflexao ( const Vec_3<T> &vetor, const Vec_3<T> &normal );
+template <class T> Vec_3<T> vetor_refracao ( const Vec_3<T> &vetor, const Vec_3<T> &normal, T indice_meio_1, T indice_meio_2 );
+
 #include "algebra_vetor.inl"
 
 #endif

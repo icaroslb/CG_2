@@ -14,8 +14,8 @@ public:
 	**  especular e o fator do brilho do material
     **  Saída:
     */
-	Esfera( const Vec_4<T> &posicao, T raio, const Vec_3<T> &ambiente, const Vec_3<T> &difusa, const Vec_3<T> &especular, T brilho )
-	: Objeto<T>( ambiente, difusa, especular, brilho ) 
+	Esfera( const Vec_4<T> &posicao, T raio, const Vec_3<T> &ambiente, const Vec_3<T> &difusa, const Vec_3<T> &especular, T brilho, T transparencia )
+	: Objeto<T>( ambiente, difusa, especular, brilho, transparencia ) 
 	, posicao( posicao )
 	, raio( raio )
 	{}

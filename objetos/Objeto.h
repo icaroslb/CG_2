@@ -20,17 +20,20 @@ public:
     Vec_3<T> especular;
     T brilho;
 
+    T transparencia;
+
     /*! Objeto
     **  Entrada: Os valores de ambiente, difusa, especular e o fator do brilho do material
     **  Saída:
     */
-    Objeto( const Vec_3<T> &ambiente, const Vec_3<T> &difusa, const Vec_3<T> &especular, T brilho )
+    Objeto( const Vec_3<T> &ambiente, const Vec_3<T> &difusa, const Vec_3<T> &especular, T brilho, T transparencia )
     : matriz_tranformacao( Matriz_tipo::IDENTIDADE )
     , matriz_tranformacao_inversa( Matriz_tipo::IDENTIDADE )
     , ambiente( ambiente )
     , difusa( difusa )
     , especular( especular )
     , brilho( brilho )
+    , transparencia( transparencia )
     {}
 
     /*! intersecao
