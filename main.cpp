@@ -1,4 +1,6 @@
 #include <iostream>
+#define _USE_MATH_DEFINES
+#include <cmath>
 #include "camera/Camera.h"
 #include "engines/Engine_OpenGl.h"
 #include "engines/Engine_SDL.h"
@@ -23,7 +25,7 @@ int main (int argc, char *argv[]) {
     
     Engine_SDL tela( "CG 2", 500, 500 );
 	Engine_OpenGl opengl;
-	Shader shader( "../shaders/shader.vs", "../shaders/shader.fs" );
+	Shader shader( "shaders/shader.vs", "shaders/shader.fs" );
 	
 	SDL_Event evento;
 	bool loop = true;
